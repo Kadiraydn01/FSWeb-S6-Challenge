@@ -1,18 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const App = () => {
-  // Try to think through what state you'll need for this app before starting. Then build out
-  // the state properties here.
+const HeroList = () => {
+  const [heroes, setHeroes] = useState([]);
+  const [selectedHero, setSelectedHero] = useState(null);
 
-  // Fetch characters from the API in an effect hook. Remember, anytime you have a 
-  // side effect in a component, you want to think about which state and/or props it should
-  // sync up with, if any.
+  useEffect(() => {
+    axios
+      .get("https://swapi.dev/api/people/")
+      .then((response) => {
+        setHeroes(response.data);
+      })
+      .catch((error) => {
+        console.error("API Error:", error);
+      });
+  }, []);
 
+  const handleHeroClick = (hero) => {
+    setSelectedHero(hero);
+  };
+  console.log(heroes);
   return (
-    <div className="App">
-      <h1 className="Header">Karakterler</h1>
+    <div className="container">
+      <h1>Kahramanlar Vs Ben</h1>
+      <ul>
+        {heroes.map((hero) => (
+          <li key={hero.id} onClick={() => handleHeroClick(hero)}>
+            {hero.name}
+          </li>
+        ))}
+      </ul>
+      {selectedHero && <HeroDetails hero={selectedHero} />}
     </div>
   );
-}
+};
 
-export default App;
+const HeroDetails = ({ hero }) => {
+  return (
+    <div className="hero-details">
+      <h2>{hero.name}</h2>
+      <p>Gender: {hero.gender}</p>
+      <p>Height: {hero.height}</p>
+      <p>Mass: {hero.mass}</p>
+      <p>BirthYear: {hero.birth_year}</p>
+      <p>Eye Color: {hero.eye_color}</p>
+      <p>Hair Color: {hero.hair_color}</p>
+      <p>Skin Color: {hero.skin_color}</p>
+    </div>
+  );
+};
+
+export default HeroList;
