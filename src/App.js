@@ -19,7 +19,7 @@ const HeroList = () => {
   const handleHeroClick = (hero) => {
     setSelectedHero(hero);
   };
-  console.log(heroes);
+
   return (
     <div className="container">
       <h1>Kahramanlar Vs Ben</h1>
